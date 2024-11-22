@@ -1,0 +1,259 @@
+/* Thiết lập cơ bản */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    height: 100hv;
+    background-color: #f4f6f9;
+    color: #333;
+    padding: 0px;
+    line-height: 1.6;
+}
+
+.article{
+    margin-top: 10px;
+}
+
+
+/* Header */
+header {
+    text-align: center;
+    padding: 0px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+header h1 {
+    padding-top: 10px;
+    font-size: 2.2em;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.1em;
+    color: #cce1ff;
+    margin-bottom: 5px;
+}
+
+/* Thanh tìm kiếm */
+/* Search Box Style */
+.search-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: auto;
+    margin-bottom: 100px;
+}
+
+/* Table Style */
+.search-box table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.search-box td {
+    padding: 10px;
+    vertical-align: middle;
+    font-size: 0.95em;
+}
+
+/* Input and Select Fields */
+.search-box input[type="text"],
+.search-box select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.9em;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-box input[type="text"]:focus,
+.search-box select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+
+/* Search Button */
+.btnsearch {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btnsearch:hover {
+    background-color: #005bb5;
+}
+
+/* Advanced Search Link */
+.advanced-search {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #007bff;
+    text-align: center;
+}
+
+.advanced-search a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.advanced-search a:hover {
+    text-decoration: underline;
+}
+
+
+/* Khu vực nổi bật */
+.highlights {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.highlight-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.stat {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    transition: transform 0.3s ease;
+}
+
+.stat:hover {
+    transform: scale(1.05);
+}
+
+.stat h3 {
+    color: #007bff;
+}
+
+
+/*bds*/
+
+.vip-header {
+    text-shadow: 1px 1px #2250e2;
+    text-transform: uppercase;
+    margin: 0;
+    width: 100%;
+    padding: 8px 0;
+    text-indent: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: -webkit-linear-gradient(top, #0090b5, #59acc5);
+
+}
+
+.item-list {
+    height: 100%;
+    background-color: #fff;
+    padding: 7px 0 10 3px;
+}    
+
+.item {
+width: 310px;
+float: left;
+margin: 0 1px 7px 5px;
+padding: 5px;
+border: 1px solid #e0e0e0;
+line-height: 17px;
+position: relative;
+}
+
+
+/* Danh sách bất động sản */
+.properties {
+    margin-bottom: 30px;
+}
+
+.property-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.property-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    width: 250px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.property-card:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
+}
+
+.property-card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.property-card h3 {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.property-info p {
+    color: #555;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+/* Phân tích thị trường */
+.market-analysis {
+    margin: 40px 0;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.market-analysis img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: #777;
+    font-size: 0.9em;
+    padding: 10px;
+}
+
+footer p {
+    margin: 10px 0;
+}
