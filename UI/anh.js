@@ -27,8 +27,20 @@ function LoadQuanHuyen() {
     // Gọi API hoặc lấy dữ liệu quận/huyện dựa trên provinceId
     // Ví dụ giả lập với mảng quận/huyện cho từng tỉnh
     const districts = {
-        1: ["Ba Đình", "Hoàn Kiếm", "Đống Đa"],
-        2: ["Quận 1", "Quận 2", "Quận 3"],
+        1: ["Ba Đình", "Hoàn Kiếm", "Tây Hồ", "Long Biên", "Cầu Giấy",
+        "Đống Đa", "Hai Bà Trưng", "Hoàng Mai", "Thanh Xuân", 
+        "Nam Từ Liêm", "Bắc Từ Liêm", "Hà Đông", "Sơn Tây",
+        "Thanh Trì", "Gia Lâm", "Đông Anh", "Sóc Sơn", "Hoài Đức", 
+        "Đan Phượng", "Thạch Thất", "Quốc Oai", "Chương Mỹ", 
+        "Thanh Oai", "Ứng Hòa", "Mỹ Đức", "Phú Xuyên", "Thường Tín", 
+        "Ba Vì", "Mê Linh"],
+        2: [
+            "Quận 1", "Quận 3", "Quận 4", "Quận 5", "Quận 6",
+            "Quận 7", "Quận 8", "Quận 10", "Quận 11", "Quận 12",
+            "Bình Thạnh", "Gò Vấp", "Phú Nhuận", "Tân Bình", 
+            "Tân Phú", "Bình Tân", "Thủ Đức",
+            "Bình Chánh", "Cần Giờ", "Củ Chi", "Hóc Môn", "Nhà Bè"
+        ],
         // Thêm các tỉnh khác với danh sách quận/huyện tương ứng
     };
 
