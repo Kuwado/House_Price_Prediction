@@ -138,28 +138,11 @@ df_cleaned = df_cleaned.drop(
     ["index", "address", "district", "ward", "type_of_housing", "legal_paper"],
     axis=1,
 )
-df_cleaned.head()
-
-
-def remove_outlier_IQR(df, series):
-    Q1 = df[series].quantile(0.25)
-    Q3 = df[series].quantile(0.75)
-    IQR = Q3 - Q1
-    df_final = df[~((df[series] < (Q1 - 1.5 * IQR)) | (df[series] > (Q3 + 1.5 * IQR)))]
-    return df_final
+print(df_cleaned.head())
 
 
 removed_outliers = df_cleaned
-columns_to_remove_outliers = [
-    "num_floors",
-    "num_bed_rooms",
-    "squared_meter_area",
-    # "length_meter",
-    # "width_meter",
-    "price_in_million_per_square_meter",
-]
-for column in columns_to_remove_outliers:
-    removed_outliers = remove_outlier_IQR(removed_outliers, column)
+
 
 print("The final length of the dataset is", str(len(removed_outliers)), "rows.")
 
