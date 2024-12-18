@@ -136,7 +136,7 @@ print(TestingData["Giá/m2"].head())
 print(TestingData["LR_predictions"].head())
 
 # Lưu mô hình RandomForestRegressor vào file
-# joblib.dump(model, "../models/random_forest_model.pkl")
+joblib.dump(model, "../models/random_forest_model.pkl")
 
 # Create a figure and axis object
 plt.figure(figsize=(10, 6))
