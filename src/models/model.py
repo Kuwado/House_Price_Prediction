@@ -10,7 +10,10 @@ print("Dữ liệu gốc:")
 print(data.head(5))
 
 # Load the trained model and scalers
-model = joblib.load("linear_regression_model.pkl")
+
+model = joblib.load("random_forest_model.pkl")
+# model = joblib.load("linear_regression_model.pkl")
+
 PredictorScalerFit = joblib.load("predictor_scaler.pkl")
 TargetVarScalerFit = joblib.load("target_var_scaler.pkl")
 print("Mô hình và scaler đã được tải thành công!")
@@ -82,13 +85,15 @@ def preprocess_input(ward, district, house_type, legal_paper, floors, bedrooms, 
 
 
 # Example input
-ward = "Phường Định Công"
-district = "Quận Hoàng Mai"
+
+ward = "Phường Trung Hoà"
+district = "Quận Cầu Giấy"
 house_type = "Nhà ngõ, hẻm"
 legal_paper = "Đã có sổ"
 floors = 5
 bedrooms = 4
-area = 30
+area = 65
+
 
 # Preprocess input
 input_processed = preprocess_input(
@@ -98,7 +103,7 @@ print("Dữ liệu đầu vào đã tiền xử lý:")
 print(input_processed)
 
 # Predict using the trained model
-prediction_scaled = model.predict(input_processed.values)
+prediction_scaled = model.predict(input_processed.values).reshape(-1, 1)
 prediction = TargetVarScalerFit.inverse_transform(prediction_scaled)
 
 # Display prediction result
