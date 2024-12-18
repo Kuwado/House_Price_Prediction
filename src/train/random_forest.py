@@ -5,10 +5,11 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
-from tqdm import tqdm  # Import tqdm for progress bar
+from tqdm import tqdm
 import joblib
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 # Turn off warnings
@@ -64,7 +65,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     X_array, y_array, test_size=0.2, random_state=2032
 )
 
-print("X", X_test)
 
 # Sanity check
 if (
@@ -75,32 +75,36 @@ if (
 ):
     print("All train and test sets have correct dimensions.")
 
-# --------------------------
-# Linear Regression model
-model = LinearRegression()
+# ----------------------------------------------
+# model = RandomForestRegressor(n_estimators=200, random_state=42, max_depth=10)
+model = RandomForestRegressor(
+    bootstrap=True,
+    max_depth=80,
+    max_features="sqrt",
+    min_samples_leaf=1,
+    min_samples_split=5,
+    n_estimators=600,
+    random_state=42,
+)
 model.fit(X_train, y_train)
 r_sq = model.score(X_train, y_train)
 print(f"Coefficient of determination for Linear Regression: {r_sq}")
-
-# Predict using the Linear Regression model
 y_pred = model.predict(X_test)
 print(
     "Predictions from the Linear Regression model:\n", y_pred[:5]
 )  # Show the first 5 predictions
 
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
 
-# --------------------------
-# Define function to evaluate predictions using Accuracy Score (MAPE)
+print(f"Mean Squared Error (MSE): {mse:,.2f}")
+print(f"Coefficient of Determination (R^2): {r2:.2f}")
+
+
 def Accuracy_Score(orig, pred):
     MAPE = np.mean(100 * (np.abs(orig - pred) / orig))
     return 100 - MAPE
 
-
-# Evaluate accuracy for the Linear Regression model
-accuracy_lr = Accuracy_Score(y_test, y_pred)
-print(f"Accuracy for the LR model is: {accuracy_lr}%")
-
-# -------------------------------------------------------------------
 
 y_test_orig = TargetVarScalerFit.inverse_transform(y_test)
 print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
@@ -112,8 +116,12 @@ Test_Data = np.concatenate(
 TestingData = pd.DataFrame(data=Test_Data, columns=X.columns)
 TestingData["Giá/m2"] = y_test_orig
 
-LR_predictions = model.predict(X_test)
-LR_predictions = TargetVarScalerFit.inverse_transform(LR_predictions)
+
+LR_predictions = model.predict(X_test)  # Dự đoán từ mô hình
+LR_predictions = LR_predictions.reshape(-1, 1)  # Chuyển sang 2D
+LR_predictions = TargetVarScalerFit.inverse_transform(
+    LR_predictions
+)  # Chuyển về giá trị gốc
 TestingData["LR_predictions"] = LR_predictions
 from sklearn.metrics import mean_squared_error
 
@@ -127,30 +135,27 @@ print(
 print(TestingData["Giá/m2"].head())
 print(TestingData["LR_predictions"].head())
 
-# joblib.dump(model, "../models/linear_regression_model.pkl")
-# joblib.dump(PredictorScalerFit, "../models/predictor_scaler.pkl")
-# joblib.dump(TargetVarScalerFit, "../models/target_var_scaler.pkl")
-print("Mô hình và scalers đã được lưu thành công!")
-
-print(TestingData["Giá/m2"].head())
-print(TestingData["LR_predictions"].head())
+# Lưu mô hình RandomForestRegressor vào file
+# joblib.dump(model, "../models/random_forest_model.pkl")
 
 # Create a figure and axis object
 plt.figure(figsize=(10, 6))
 
-# Plot the actual and predicted house prices as scatter plots
-plt.scatter(
+# Plot the actual and predicted house prices as line plots
+plt.plot(
     TestingData.index,
     TestingData["Giá/m2"],
     label="Actual Prices",
     color="blue",
+    linestyle="-",
     marker="o",
 )
-plt.scatter(
+plt.plot(
     TestingData.index,
     TestingData["LR_predictions"],
     label="Predicted Prices",
     color="red",
+    linestyle="--",
     marker="x",
 )
 
