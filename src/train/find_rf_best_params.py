@@ -81,7 +81,7 @@ if (
 # Create a dictionary of random parameters for the model
 RF_random_grid = {
     "n_estimators": [int(x) for x in np.linspace(start=100, stop=1000, num=10)],
-    "max_features": ["auto", "sqrt", "log2"],
+    "max_features": ["sqrt", "log2"],
     "max_depth": [int(x) for x in np.linspace(10, 100, num=10)],
     "min_samples_split": [2, 3, 5],
     "min_samples_leaf": [1, 2, 3],
@@ -96,7 +96,7 @@ RF_random_search = RandomizedSearchCV(
     estimator=RF_regressor,
     param_distributions=RF_random_grid,
     n_iter=20,
-    cv=2,
+    cv=5,
     verbose=1,
     random_state=2022,
     n_jobs=-1,

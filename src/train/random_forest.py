@@ -127,6 +127,15 @@ from sklearn.metrics import mean_squared_error
 
 np.sqrt(mean_squared_error(LR_predictions, y_test))
 
+mse = mean_squared_error(TestingData["Giá/m2"], TestingData["LR_predictions"])
+r2 = r2_score(
+    TargetVarScalerFit.inverse_transform(y_test.reshape(-1, 1)),
+    TargetVarScalerFit.inverse_transform(y_pred.reshape(-1, 1)),
+)
+
+print(f"Mean Squared Error (MSE): {mse:,.2f}")
+print(f"Coefficient of Determination (R^2): {r2:.2f}")
+
 print(
     "Accuracy for the LR model is:",
     str(Accuracy_Score(TestingData["Giá/m2"], TestingData["LR_predictions"])),
@@ -136,7 +145,7 @@ print(TestingData["Giá/m2"].head())
 print(TestingData["LR_predictions"].head())
 
 # Lưu mô hình RandomForestRegressor vào file
-joblib.dump(model, "../models/random_forest_model.pkl")
+# joblib.dump(model, "../models/random_forest_model.pkl")
 
 # Create a figure and axis object
 plt.figure(figsize=(10, 6))
@@ -168,4 +177,4 @@ plt.title("Comparison of Actual and Predicted House Prices")
 plt.legend()
 
 # Display the plot
-plt.show()
+# plt.show()
