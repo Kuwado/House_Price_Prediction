@@ -96,7 +96,7 @@ RF_random_search = RandomizedSearchCV(
     estimator=RF_regressor,
     param_distributions=RF_random_grid,
     n_iter=20,
-    cv=5,
+    cv=2,
     verbose=1,
     random_state=2022,
     n_jobs=-1,
@@ -115,8 +115,8 @@ RF_param_grid = {
     ],
     "max_features": ["sqrt", "log2"],
     "max_depth": [RF_best_params["max_depth"] - 10, RF_best_params["max_depth"]],
-    "min_samples_split": [2, 3, 5],
-    "min_samples_leaf": [1, 2, 3],
+    "min_samples_split": [5, 10],
+    "min_samples_leaf": [1, 2],
     "bootstrap": [True, False],
 }
 

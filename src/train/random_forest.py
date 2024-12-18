@@ -83,7 +83,7 @@ model = RandomForestRegressor(
     max_features="sqrt",
     min_samples_leaf=1,
     min_samples_split=5,
-    n_estimators=600,
+    n_estimators=800,
     random_state=42,
 )
 model.fit(X_train, y_train)

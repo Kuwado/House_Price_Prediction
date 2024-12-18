@@ -9,6 +9,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm  # Import tqdm for progress bar
 import joblib
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 
 # Turn off warnings
@@ -79,6 +80,7 @@ if (
 # Linear Regression model
 model = LinearRegression()
 model.fit(X_train, y_train)
+
 r_sq = model.score(X_train, y_train)
 print(f"Coefficient of determination for Linear Regression: {r_sq}")
 
@@ -119,14 +121,17 @@ from sklearn.metrics import mean_squared_error
 
 np.sqrt(mean_squared_error(LR_predictions, y_test))
 
-print(
-    "Accuracy for the LR model is:",
-    str(Accuracy_Score(TestingData["Giá/m2"], TestingData["LR_predictions"])),
-)
+mae = mean_absolute_error(TestingData["Giá/m2"], TestingData["LR_predictions"])
+mse = mean_squared_error(TestingData["Giá/m2"], TestingData["LR_predictions"])
+r2 = r2_score(TestingData["Giá/m2"], TestingData["LR_predictions"])
+accuracy = Accuracy_Score(TestingData["Giá/m2"], TestingData["LR_predictions"])
 
+print("MAE of Linear Regression: ", mae)
+print("MSE of Linear Regression: ", mse)
+print("R2 of Linear Regression: ", r2)
+print("Accuracy of Linear Regression: ", accuracy)
 
-print(TestingData["Giá/m2"].head())
-print(TestingData["LR_predictions"].head())
+print(TestingData[["Giá/m2", "LR_predictions"]].head())
 
 # joblib.dump(model, "../models/linear_regression_model.pkl")
 # joblib.dump(PredictorScalerFit, "../models/predictor_scaler.pkl")
@@ -164,5 +169,4 @@ plt.title("Comparison of Actual and Predicted House Prices")
 plt.legend()
 
 # Display the plot
-plt.show()
-
+# plt.show()

@@ -2,7 +2,7 @@ import warnings
 import os
 import numpy as np
 import pandas as pd
-import datetime 
+import datetime
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -12,10 +12,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import GridSearchCV
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
-
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.wrappers.scikit_learn import KerasRegressor
 
 
 # Load and preprocess your dataset
@@ -66,27 +65,39 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Turn off TensorFlow messages and warnings
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 os.environ["KMP_SETTINGS"] = "false"
+
 
 # Create the base model
 def create_regression_ANN(optimizer_trial):
     model = Sequential()
-    model.add(Dense(units=10, input_dim=X_train.shape[1], kernel_initializer='normal', activation='relu'))
-    model.add(Dense(1, kernel_initializer='normal'))
-    model.compile(loss='mean_squared_error', optimizer=optimizer_trial)
+    model.add(
+        Dense(
+            units=10,
+            input_dim=X_train.shape[1],
+            kernel_initializer="normal",
+            activation="relu",
+        )
+    )
+    model.add(Dense(1, kernel_initializer="normal"))
+    model.compile(loss="mean_squared_error", optimizer=optimizer_trial)
     return model
 
+
 # Creathe a dictionary for trial parameters
-ANN_params = {'batch_size':[10, 20, 30, 50],
-             'epochs':[10, 20, 50],
-             'optimizer_trial':['adam', 'rmsprop']}
+ANN_params = {
+    "batch_size": [10, 20, 30, 50],
+    "epochs": [10, 20, 50],
+    "optimizer_trial": ["adam", "rmsprop"],
+}
 
 ANN_trial = KerasRegressor(create_regression_ANN, verbose=0)
 
 # Initiate the grid search and storing best parameters for later reference
-ANN_grid_search = GridSearchCV(estimator=ANN_trial, param_grid=ANN_params, 
-                               cv=3, n_jobs = -1).fit(X_train, y_train, verbose=0)
+ANN_grid_search = GridSearchCV(
+    estimator=ANN_trial, param_grid=ANN_params, cv=3, n_jobs=-1
+).fit(X_train, y_train, verbose=0)
 ANN_best_params = ANN_grid_search.best_params_
 
 # Showing the best parameters
@@ -94,26 +105,37 @@ ANN_best_params
 
 
 # Fitting the ANN to the Training set
-ANN = Sequential()                
-ANN.add(Dense(units=10, input_dim=X_train.shape[1], 
-                kernel_initializer='normal', activation='relu'))
-ANN.add(Dense(1, kernel_initializer='normal'))
-ANN.compile(loss='mean_squared_error', optimizer=ANN_best_params['optimizer_trial'])
-ANN.fit(X_train, y_train,batch_size = int(ANN_best_params['batch_size']),
-        epochs = int(ANN_best_params['epochs']), verbose=0)
+ANN = Sequential()
+ANN.add(
+    Dense(
+        units=10,
+        input_dim=X_train.shape[1],
+        kernel_initializer="normal",
+        activation="relu",
+    )
+)
+ANN.add(Dense(1, kernel_initializer="normal"))
+ANN.compile(loss="mean_squared_error", optimizer=ANN_best_params["optimizer_trial"])
+ANN.fit(
+    X_train,
+    y_train,
+    batch_size=int(ANN_best_params["batch_size"]),
+    epochs=int(ANN_best_params["epochs"]),
+    verbose=0,
+)
 
 # Generating Predictions on testing data
 ANN_predictions = ANN.predict(X_test)
- 
+
 # Scaling the predicted Price data back to original price scale
 ANN_predictions = TargetVarScalerFit.inverse_transform(ANN_predictions)
- 
+
 # Scaling the y_test Price data back to original price scale
 y_test_orig = TargetVarScalerFit.inverse_transform(y_test)
- 
+
 # Scaling the test data back to the original scale for the columns that were scaled
-X_test_scaled = X_test[:, :len(to_be_scaled)]  # Extract the scaled columns
-X_test_non_scaled = X_test[:, len(to_be_scaled):]  # Extract the non-scaled columns
+X_test_scaled = X_test[:, : len(to_be_scaled)]  # Extract the scaled columns
+X_test_non_scaled = X_test[:, len(to_be_scaled) :]  # Extract the non-scaled columns
 
 # Apply the inverse transform only to the scaled columns
 X_test_scaled_back = PredictorScalerFit.inverse_transform(X_test_scaled)
@@ -123,17 +145,21 @@ Test_Data = np.concatenate((X_test_scaled_back, X_test_non_scaled), axis=1)
 
 # Recreating the dataset, now with predicted price using the ANN model
 TestingData = pd.DataFrame(data=Test_Data, columns=X.columns)
-TestingData['Price'] = y_test_orig
-TestingData['ANN_predictions'] = ANN_predictions
+TestingData["Price"] = y_test_orig
+TestingData["ANN_predictions"] = ANN_predictions
 
 # Display the first few rows of the final dataframe
-TestingData[['Price', 'ANN_predictions']].head()
+TestingData[["Price", "ANN_predictions"]].head()
+
 
 # Define a function evaluate the predictions
 def Accuracy_Score(orig, pred):
     MAPE = np.mean(100 * (np.abs(orig - pred) / orig))
-    return(100-MAPE)
+    return 100 - MAPE
 
 
 # Showing scores for both the ANN and the RF model
-print("Accuracy for the ANN model is:", str(Accuracy_Score(TestingData['Price'], TestingData['ANN_predictions'])))
+print(
+    "Accuracy for the ANN model is:",
+    str(Accuracy_Score(TestingData["Price"], TestingData["ANN_predictions"])),
+)

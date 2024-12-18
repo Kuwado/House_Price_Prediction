@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import joblib
 from sklearn.preprocessing import StandardScaler
+from keras.models import load_model
 
 
 @st.cache_resource
@@ -11,13 +12,14 @@ def load_data_and_models():
     data = pd.read_csv("../data/cleaned_data.csv")
     rf_model = joblib.load("models/random_forest_model.pkl")
     lr_model = joblib.load("models/linear_regression_model.pkl")
+    ann_model = load_model("models/ann.h5")
     PredictorScalerFit = joblib.load("models/predictor_scaler.pkl")
     TargetVarScalerFit = joblib.load("models/target_var_scaler.pkl")
     print("Mô hình và scaler đã được tải thành công!")
-    return data, rf_model, lr_model, PredictorScalerFit, TargetVarScalerFit
+    return data, rf_model, lr_model, ann_model, PredictorScalerFit, TargetVarScalerFit
 
 
-data, rf_model, lr_model, PredictorScalerFit, TargetVarScalerFit = (
+data, rf_model, lr_model, ann_model, PredictorScalerFit, TargetVarScalerFit = (
     load_data_and_models()
 )
 
@@ -95,18 +97,6 @@ def preprocess_input(ward, district, house_type, legal_paper, floors, bedrooms, 
 # area = 65
 
 # Tạo giao diện với Streamlit
-st.markdown(
-    """
-    <style>
-    .main {
-        padding-left: 50px;
-        padding-right: 50px;
-        background-color: blue;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
 st.title("Dự đoán giá nhà tại Hà Nội")
 st.write("Nhập thông tin chi tiết về ngôi nhà để dự đoán giá.")
 
@@ -131,9 +121,11 @@ if predict_button:
         # Dự đoán
         lr_prediction_scaled = lr_model.predict(input_processed.values).reshape(-1, 1)
         rf_prediction_scaled = rf_model.predict(input_processed.values).reshape(-1, 1)
+        ann_prediction_scaled = ann_model.predict(input_processed.values).reshape(-1, 1)
 
         lr_prediction = TargetVarScalerFit.inverse_transform(lr_prediction_scaled)
         rf_prediction = TargetVarScalerFit.inverse_transform(rf_prediction_scaled)
+        ann_prediction = TargetVarScalerFit.inverse_transform(ann_prediction_scaled)
 
         # Hiển thị kết quả
         st.success(
@@ -142,5 +134,6 @@ if predict_button:
         st.success(
             f"Giá nhà dự đoán (Random Forest): {rf_prediction[0][0]:,.0f} triệu VNĐ/m2"
         )
+        st.success(f"Giá nhà dự đoán (ANN): {ann_prediction[0][0]:,.0f} triệu VNĐ/m2")
     except Exception as e:
         st.error(f"Đã xảy ra lỗi: {e}")
