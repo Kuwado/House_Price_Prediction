@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 import joblib
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 
 # Turn off warnings
@@ -83,7 +83,7 @@ model = RandomForestRegressor(
     max_features="sqrt",
     min_samples_leaf=1,
     min_samples_split=5,
-    n_estimators=800,
+    n_estimators=600,
     random_state=42,
 )
 model.fit(X_train, y_train)
@@ -117,32 +117,33 @@ TestingData = pd.DataFrame(data=Test_Data, columns=X.columns)
 TestingData["Giá/m2"] = y_test_orig
 
 
-LR_predictions = model.predict(X_test)  # Dự đoán từ mô hình
-LR_predictions = LR_predictions.reshape(-1, 1)  # Chuyển sang 2D
-LR_predictions = TargetVarScalerFit.inverse_transform(
-    LR_predictions
+RF_predictions = model.predict(X_test)  # Dự đoán từ mô hình
+RF_predictions = RF_predictions.reshape(-1, 1)  # Chuyển sang 2D
+RF_predictions = TargetVarScalerFit.inverse_transform(
+    RF_predictions
 )  # Chuyển về giá trị gốc
-TestingData["LR_predictions"] = LR_predictions
+TestingData["RF_predictions"] = RF_predictions
 from sklearn.metrics import mean_squared_error
 
-np.sqrt(mean_squared_error(LR_predictions, y_test))
+np.sqrt(mean_squared_error(RF_predictions, y_test))
 
-mse = mean_squared_error(TestingData["Giá/m2"], TestingData["LR_predictions"])
+mse = mean_squared_error(TestingData["Giá/m2"], TestingData["RF_predictions"])
 r2 = r2_score(
     TargetVarScalerFit.inverse_transform(y_test.reshape(-1, 1)),
     TargetVarScalerFit.inverse_transform(y_pred.reshape(-1, 1)),
 )
 
-print(f"Mean Squared Error (MSE): {mse:,.2f}")
-print(f"Coefficient of Determination (R^2): {r2:.2f}")
+mae = mean_absolute_error(TestingData["Giá/m2"], TestingData["RF_predictions"])
+mse = mean_squared_error(TestingData["Giá/m2"], TestingData["RF_predictions"])
+r2 = r2_score(TestingData["Giá/m2"], TestingData["RF_predictions"])
+accuracy = Accuracy_Score(TestingData["Giá/m2"], TestingData["RF_predictions"])
 
-print(
-    "Accuracy for the LR model is:",
-    str(Accuracy_Score(TestingData["Giá/m2"], TestingData["LR_predictions"])),
-)
+print("MAE of Random Forest: ", mae)
+print("MSE of Random Forest: ", mse)
+print("R2 of Random Forest: ", r2)
+print("Accuracy of Random Forest: ", accuracy)
 
-print(TestingData["Giá/m2"].head())
-print(TestingData["LR_predictions"].head())
+print(TestingData[["Giá/m2", "RF_predictions"]].head())
 
 # Lưu mô hình RandomForestRegressor vào file
 # joblib.dump(model, "../models/random_forest_model.pkl")
@@ -161,7 +162,7 @@ plt.plot(
 )
 plt.plot(
     TestingData.index,
-    TestingData["LR_predictions"],
+    TestingData["RF_predictions"],
     label="Predicted Prices",
     color="red",
     linestyle="--",
@@ -177,4 +178,4 @@ plt.title("Comparison of Actual and Predicted House Prices")
 plt.legend()
 
 # Display the plot
-# plt.show()
+plt.show()

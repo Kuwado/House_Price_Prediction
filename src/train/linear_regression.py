@@ -105,7 +105,11 @@ print(f"Accuracy for the LR model is: {accuracy_lr}%")
 # -------------------------------------------------------------------
 
 y_test_orig = TargetVarScalerFit.inverse_transform(y_test)
-print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
+
+print("X train: ", X_train.shape)
+print("X test: ", X_test.shape)
+print("y train: ", y_train.shape)
+print("y test: ", y_test.shape)
 
 # Scaling the test data back to original scale
 Test_Data = np.concatenate(
@@ -141,22 +145,21 @@ print("Mô hình và scalers đã được lưu thành công!")
 print(TestingData["Giá/m2"].head())
 print(TestingData["LR_predictions"].head())
 
-# Create a figure and axis object
-plt.figure(figsize=(10, 6))
-
-# Plot the actual and predicted house prices as scatter plots
-plt.scatter(
+# Plot the actual and predicted house prices as line plots
+plt.plot(
     TestingData.index,
     TestingData["Giá/m2"],
     label="Actual Prices",
     color="blue",
+    linestyle="-",
     marker="o",
 )
-plt.scatter(
+plt.plot(
     TestingData.index,
     TestingData["LR_predictions"],
     label="Predicted Prices",
     color="red",
+    linestyle="--",
     marker="x",
 )
 
