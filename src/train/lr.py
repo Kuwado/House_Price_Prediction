@@ -124,6 +124,7 @@ print(
     str(Accuracy_Score(TestingData["Giá/m2"], TestingData["LR_predictions"])),
 )
 
+
 print(TestingData["Giá/m2"].head())
 print(TestingData["LR_predictions"].head())
 
@@ -164,3 +165,4 @@ plt.legend()
 
 # Display the plot
 plt.show()
+
